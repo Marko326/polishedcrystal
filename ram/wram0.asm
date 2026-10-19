@@ -1404,7 +1404,8 @@ wOptions3::
 ; bit 1: nicknames always ("Yes")
 ; bit 2: nicknames never ("No")
 ; (bits 1 and 2 are never both set; both clear = "Ask")
-; bits 3-7: unused
+; bit 3: background music off (sound effects and cries still audible)
+; bits 4-7: unused
 	db
 
 wOptions::

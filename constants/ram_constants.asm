@@ -23,6 +23,7 @@ DEF JOYPAD_DISABLE_SGB_TRANSFER_F EQU 7
 	const QWERTY_KEYBOARD_F  ; 0
 	const NICKNAMES_ALWAYS   ; 1
 	const NICKNAMES_NEVER    ; 2
+	const MUSIC_OFF          ; 3: mute background music, retain sound effects/cries
 
 ; wOptions1::
 	const_def 3

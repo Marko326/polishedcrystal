@@ -40,7 +40,7 @@ OptionsMenu:
 .BGPalettes:
 INCLUDE "gfx/options/options_bg.pal"
 
-DEF NUM_OPTIONS EQU 13
+DEF NUM_OPTIONS EQU 14
 
 OptionsMenu_CallOptionRoutine:
 	ld a, [wMenuSelection]
@@ -55,6 +55,7 @@ OptionsMenu_CallOptionRoutine:
 	dw Options_Typeface
 	dw Options_Keyboard
 	dw Options_Sound
+	dw Options_Music
 	dw Options_BattleEffects
 	dw Options_BattleStyle
 	dw Options_Nicknames
@@ -158,6 +159,30 @@ Options_TextSpeed:
 	db "Fast   @"
 .Instant:
 	db "Instant@"
+
+Options_Music:
+; Match Gold 1.01: mute BGM only. This bit is saved by the existing
+; wOptions3 / sOptions3 handling without altering the save layout.
+	ld hl, wOptions3
+	ldh a, [hJoyPressed]
+	and PAD_LEFT | PAD_RIGHT
+	jr nz, .Toggle
+	bit MUSIC_OFF, [hl]
+	jr z, .SetOn
+	jr .SetOff
+
+.Toggle:
+	bit MUSIC_OFF, [hl]
+	jr z, .SetOff
+.SetOn:
+	res MUSIC_OFF, [hl]
+	ld de, OnString
+	jmp OptionsShared_PlaceStringAtValueCoord
+
+.SetOff:
+	set MUSIC_OFF, [hl]
+	ld de, OffString
+	jmp OptionsShared_PlaceStringAtValueCoord
 
 Options_BattleEffects:
 	ld hl, wOptions1

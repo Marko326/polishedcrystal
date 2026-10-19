@@ -6,6 +6,7 @@ OptionNames:
 	dw .Typeface
 	dw .Keyboard
 	dw .Sound
+	dw .Music
 	dw .BattleEffects
 	dw .BattleStyle
 	dw .Nicknames
@@ -27,6 +28,8 @@ OptionNames:
 	db "Keyboard@"
 .Sound:
 	db "Sound@"
+.Music:
+	db "Music@"
 .BattleEffects:
 	db "Battle Effects@"
 .BattleStyle:

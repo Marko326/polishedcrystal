@@ -6,6 +6,7 @@ OptionsDescriptions:
 	dw .Typeface
 	dw .Keyboard
 	dw .Sound
+	dw .Music
 	dw .BattleEffects
 	dw .BattleStyle
 	dw .Nicknames
@@ -48,6 +49,14 @@ OptionsDescriptions:
 
 	para "or stereo (two,"
 	line "left and right)."
+	prompt
+
+.Music:
+	text "Play background"
+	line "music, or turn"
+	cont "it off, keeping"
+	cont "sound effects and"
+	cont "#mon cries."
 	prompt
 
 .BattleEffects:

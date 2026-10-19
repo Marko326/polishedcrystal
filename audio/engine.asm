@@ -91,7 +91,7 @@ _UpdateSound::
 	ld hl, wChannel1Flags - wChannel1
 	add hl, bc
 	bit SOUND_CHANNEL_ON, [hl]
-	jr z, .nextchannel
+	jp z, .nextchannel
 	; check time left in the current note
 	ld hl, wChannel1NoteDuration - wChannel1
 	add hl, bc
@@ -159,6 +159,20 @@ _UpdateSound::
 	jr nz, .sound_channel_on
 .sfx_channel
 	call UpdateChannels
+	; Gold 1.01 music-off behavior: let BGM advance, but do not
+	; route its four channels to hardware. Channels 5-8 (SFX) and
+	; cries on channels 1-4 remain audible.
+	ld a, [wCurChannel]
+	cp CHAN5
+	jr nc, .route_channel
+	ld a, [wOptions3]
+	bit MUSIC_OFF, a
+	jr z, .route_channel
+	ld hl, wChannel1Flags - wChannel1
+	add hl, bc
+	bit SOUND_CRY, [hl]
+	jr z, .sound_channel_on
+.route_channel
 	ld hl, wChannel1Tracks - wChannel1
 	add hl, bc
 	ld a, [wSoundOutput]
@@ -185,8 +199,16 @@ _UpdateSound::
 	call PlayDanger
 	; fade music in/out
 	call FadeMusic
-	; write volume to hardware register
+	; A music fade can reduce the global volume to zero. When BGM
+	; is muted, keep SFX and cries audible throughout such fades.
+	ld a, [wOptions3]
+	bit MUSIC_OFF, a
+	jr z, .normal_volume
+	ld a, MAX_VOLUME
+	jr .write_volume
+.normal_volume
 	ld a, [wVolume]
+.write_volume
 	ldh [rAUDVOL], a
 	; write SO on/off to hardware register
 	ld hl, wSoundOutput
